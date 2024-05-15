@@ -7,83 +7,72 @@
         <link rel="stylesheet"
             href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
         <style>
-        body { 
-            font-family: Arial, sans-serif;
-            background-color: #e5ddd5; /* WhatsApp background */
-        }
-
-        .chat-container {
-            max-width: 450px; /* Smaller for phone-like width */
-            margin: 20px auto;
-            background-color: #fff;
-            border-radius: 10px; /* Rounded corners */
-        }
-
-        .chat-header { /* New header section */
-            background-color: #075E54; /* WhatsApp header green */
-            color: #fff;
-            padding: 10px;
-            border-top-left-radius: 10px;
-            border-top-right-radius: 10px;
-            text-align: center;
-        }
-
-        .chat-box {
-            padding: 15px;
-            height: 400px;
-            overflow-y: scroll;
-        }
-
-        .message {
-            margin-bottom: 10px;
-        }
-
-        .message .bubble {
-            max-width: 75%; /* Wider bubbles */
-            padding: 10px 15px;
-            border-radius: 20px;
-            background-color: #dcf8c6; /* WhatsApp green for sent */
-            align-self: flex-end;
-            color: #000; /* Black text for sent */
-            position: relative; /* For the tail */
-        }
-
-        .message .bubble.received {
-            background-color: #fff;
-            align-self: flex-start;
-            color: #222; /* Darker text for received */
-        }
-
-        .message .bubble::before { /* Message tail */
-            content: '';
-            position: absolute;
-            bottom: -6px; /* Adjust position */
-            width: 0;
-            height: 0;
-            border: 7px solid transparent; /* Adjust size */
-        }
-
-        .message .bubble.sent::before {
-            right: 10px; /* Adjust position */
-            border-left-color: #dcf8c6; /* Match bubble color */
-        }
-
-        .message .bubble.received::before {
-            left: 10px; /* Adjust position */
-            border-right-color: #fff; /* Match bubble color */
-        }
-
-        .message .sender {
-            font-size: 0.8em;
-            margin-bottom: 5px;
-            color: #777;
-        }
-
-        .input-group {
-            padding: 10px;
-            border-top: 1px solid #ddd;
-        }
-    </style>
+            body { 
+                font-family: Arial, sans-serif;
+                background-color: #e5ddd5;
+            }
+            .chat-container {
+                max-width: 450px;
+                margin: 20px auto;
+                background-color: #fff;
+                border-radius: 10px;
+            }
+            .chat-header {
+                background-color: #075E54;
+                color: #fff;
+                padding: 10px;
+                border-top-left-radius: 10px;
+                border-top-right-radius: 10px;
+                text-align: center;
+            }
+            .chat-box {
+                padding: 15px;
+                height: 400px;
+                overflow-y: scroll;
+            }
+            .message {
+                margin-bottom: 10px;
+            }
+            .message .bubble {
+                max-width: 75%;
+                padding: 10px 15px;
+                border-radius: 20px;
+                background-color: #dcf8c6;
+                align-self: flex-end;
+                color: #000;
+                position: relative;
+            }
+            .message .bubble.received {
+                background-color: #fff;
+                align-self: flex-start;
+                color: #222;
+            }
+            .message .bubble::before {
+                content: '';
+                position: absolute;
+                bottom: -6px;
+                width: 0;
+                height: 0;
+                border: 7px solid transparent;
+            }
+            .message .bubble.sent::before {
+                right: 10px;
+                border-left-color: #dcf8c6;
+            }
+            .message .bubble.received::before {
+                left: 10px;
+                border-right-color: #fff;
+            }
+            .message .sender {
+                font-size: 0.8em;
+                margin-bottom: 5px;
+                color: #777;
+            }
+            .input-group {
+                padding: 10px;
+                border-top: 1px solid #ddd;
+            }
+        </style>
     </head>
     <body>
         <div class="container chat-container">
@@ -109,43 +98,43 @@
             src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
         <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
         <script>
-        const socket = io();
-        let username = ''; // Declare username variable
+            const socket = io();
+            let username = ''; // Declare username variable
 
-        // Function to send message
-        function sendMessage() {
-            const message = document.getElementById('message').value;
-            if (message) {
-                socket.emit('message', { username: username, message: message });
-                document.getElementById('message').value = '';
+            // Function to send message
+            function sendMessage() {
+                const message = document.getElementById('message').value;
+                if (message) {
+                    socket.emit('message', { username: username, message: message });
+                    document.getElementById('message').value = '';
+                }
             }
-        }
 
-        document.getElementById('send-btn').onclick = sendMessage; // Send message on button click
+            document.getElementById('send-btn').onclick = sendMessage; // Send message on button click
 
-        // Send message on Enter key press
-        document.getElementById('message').addEventListener('keypress', function(event) {
-            if (event.key === 'Enter') {
-                sendMessage();
-            }
-        });
+            // Send message on Enter key press
+            document.getElementById('message').addEventListener('keypress', function(event) {
+                if (event.key === 'Enter') {
+                    sendMessage();
+                }
+            });
 
-        // Listen for incoming messages
-        socket.on('message', function(data) {
-            const chatBox = document.getElementById('chat-box');
-            const bubbleClass = data.username === username ? 'sent' : 'received';
-            const senderText = bubbleClass === 'received' ? `<div class="sender">${data.username}</div>` : '';
-            chatBox.innerHTML += `<div class="message">${senderText}<div class="bubble ${bubbleClass}">${data.message}</div></div>`;
-            chatBox.scrollTop = chatBox.scrollHeight;
-        });
+            // Listen for incoming messages
+            socket.on('message', function(data) {
+                const chatBox = document.getElementById('chat-box');
+                const bubbleClass = data.username === username ? 'sent' : 'received';
+                const senderText = bubbleClass === 'received' ? `<div class="sender">${data.username}</div>` : '';
+                chatBox.innerHTML += `<div class="message">${senderText}<div class="bubble ${bubbleClass}">${data.message}</div></div>`;
+                chatBox.scrollTop = chatBox.scrollHeight;
+            });
 
-        // Set username and disable input after sending the first message
-        document.getElementById('username').addEventListener('change', function() {
-            if (!username) {
-                username = this.value;
-                this.disabled = true; // Disable input after setting username
-            }
-        });
-    </script>
+            // Set username and disable input after sending the first message
+            document.getElementById('username').addEventListener('change', function() {
+                if (!username) {
+                    username = this.value;
+                    this.disabled = true; // Disable input after setting username
+                }
+            });
+        </script>
     </body>
 </html>
